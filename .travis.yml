@@ -1,0 +1,41 @@
+language: go
+sudo: required
+services:
+- docker
+
+go:
+- "1.10"
+- "1.11"
+- tip
+
+os:
+- linux
+- osx
+
+matrix:
+  allow_failures:
+  - go: tip
+  fast_finish: true
+
+jobs:
+  include:
+  - stage: check
+    script: make check
+  - stage: test
+    script: make test-unit
+  - stage: integration
+    script: make test-integration
+
+after_success:
+  # docker login is required if you want to push docker images.
+  # DOCKER_PASSWORD should be a secret in your .travis.yml configuration.
+  - test -n "$TRAVIS_TAG" && docker login -u=myuser -p="$DOCKER_PASSWORD"
+
+# calls goreleaser
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL https://git.io/goreleaser | bash
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
