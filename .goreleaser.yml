@@ -1,0 +1,46 @@
+---
+# https://goreleaser.com/
+build:
+  main: main.go
+  binary: cvm
+  ldflags:
+    - -s -w -X pkg.version={{.Version}} -X pkg.commit={{.Commit}} -X pkg.date={{.Date}} -X pkg.goversion={{.Env.GOVERSION}}
+  goos:
+    - darwin
+    - linux
+    - windows
+  goarch:
+    - amd64
+  env:
+    - CGO_ENABLED=0
+#  hooks:
+#    pre: rice embed-go
+#    post: ./script.sh
+  archive:
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{.Binary}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+    files:
+      - README.md
+      - LICENSE.md
+
+  release:
+    draft: true
+
+changelog:
+  # could either be asc, desc or empty
+  # Default is empty
+  sort: asc
+  filters:
+    # commit messages matching the regexp listed here will be removed from
+    # the changelog
+    # Default is empty
+    exclude:
+      - '^docs:'
+      - typo
+      - (?i)foo
+
+snapshot:
+  name_template: "SNAPSHOT-{{.Commit}}"
