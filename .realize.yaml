@@ -1,0 +1,50 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+server:
+  status: true
+  open: false
+  host: 0.0.0.0
+  port: 5001
+schema:
+- name: cvm
+  path: cmd/cvm
+  commands:
+    clean:
+      status: true
+    vet:
+      status: true
+    fmt:
+      status: true
+      args:
+        - -w
+        - -s
+    test:
+      status: true
+    generate:
+      status: true
+    install:
+      status: true
+    build:
+      status: true
+      args:
+        - -o bin/cvm
+        - -race
+        - -v
+    run:
+      status: true
+  watcher:
+    extensions:
+      - go
+    paths:
+      - ../..
+    ignored_paths:
+      - ../../.git
+      - ../../.realize.yaml
+      - ../../vendor
+    scripts:
+      - type: before
+        command: cd ../../ && make fetch-dependencies
+        global: true
+        output: true

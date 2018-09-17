@@ -1,0 +1,18 @@
+language: go
+sudo: required
+
+go:
+- "1.11"
+
+os:
+- linux
+
+matrix:
+  fast_finish: true
+
+jobs:
+  include:
+  - stage: check
+    script: make check
+  - stage: test
+    script: make test
