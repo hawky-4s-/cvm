@@ -17,7 +17,7 @@ SOURCES:=$(shell go list ./...)
 ################################ TARGETS ################################
 
 .PHONY: all
-all: fetch-dependencies lint test build  ## run all targets
+all: fetch-dependencies check test build  ## run all targets
 
 .PHONY: clean
 clean: ## clean up build dir

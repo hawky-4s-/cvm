@@ -10,9 +10,16 @@ os:
 matrix:
   fast_finish: true
 
+stages:
+  - name: test
+  - name: deploy
+    # require the branch name to be master (note for PRs this is the base branch name)
+    if: branch = master AND os = linux AND tag = true
+
 jobs:
   include:
-  - stage: check
-    script: make check
-  - stage: test
-    script: make test
+    - stage: test
+      script: make check
+    - script: make test && bash <(curl -s https://codecov.io/bash)
+#    - stage: deploy
+#      script: make release
